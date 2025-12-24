@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vaultcore
+    username: root
+    password: 8791
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: UTC
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  mail: 
+username: ${SMTP_USER}
+password: ${SMTP_PASS}
+   
+
+
+server:
+  port: 8080
+
+vaultcore:
+  jwt:
+    issuer: vaultcore
+    secret: BCoyNIrSG9VX•••••••••••••••••••FyYG5CGFFTpz
+    access-ttl-seconds: 900
+  fraud:
+    amount:
+      threshold: 10000

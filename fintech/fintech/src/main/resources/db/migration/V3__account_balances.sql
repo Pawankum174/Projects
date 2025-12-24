@@ -1,0 +1,1 @@
+CREATE TABLE account_balances ( account_id UUID PRIMARY KEY REFERENCES accounts(id), balance NUMERIC(18,2) NOT NULL DEFAULT 0, currency CHAR(3) NOT NULL );
