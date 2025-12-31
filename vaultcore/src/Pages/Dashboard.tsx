@@ -14,7 +14,7 @@ export default function Dashboard() {
       if (!token) return;
       setLoading(true);
       try {
-        const resp = await api.get<Balance>("/accounts/<your-account-id>/balance");
+        const resp = await api.get<Balance>("vaultcore/v1/accounts/<your-account-id>/balance");
         setData(resp.data);
       } finally { setLoading(false); }
     };

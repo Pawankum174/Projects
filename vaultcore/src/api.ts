@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "./Store/Auth";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: "http://localhost:8081/vaultcore/api/auth",
   withCredentials: true,
   timeout: 10000,
 });

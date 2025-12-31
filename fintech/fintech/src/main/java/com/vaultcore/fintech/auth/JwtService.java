@@ -2,50 +2,43 @@ package com.vaultcore.fintech.auth;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class JwtService {
 
-private final Key key;
-private final String issuer;
-private final long accessTtlSeconds;
+    // Auto-generate a random secret key at startup
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-public JwtService(
-   @Value("${vaultcore.jwt.secret}") String secret,
-   @Value("${vaultcore.jwt.issuer}") String issuer,
-   @Value("${vaultcore.jwt.access-ttl-seconds}") long accessTtlSeconds) {
- this.key = Keys.hmacShaKeyFor(secret.getBytes());
- this.issuer = issuer;
- this.accessTtlSeconds = accessTtlSeconds;
-}
+    private final String issuer = "vaultCore";
 
-public String issueAccessToken(String subject, String role) {
- Instant now = Instant.now();
- Instant exp = now.plusSeconds(accessTtlSeconds);
- return Jwts.builder()
-     .setSubject(subject)
-     .setIssuer(issuer)
-     .setIssuedAt(Date.from(now))
-     .setExpiration(Date.from(exp))
-     .addClaims(Map.of("role", role))
-     .signWith(key, SignatureAlgorithm.HS256)
-     .compact();
-}
+    public String generateToken(UUID userId, String username, String role) {
+        Instant now = Instant.now();
+        
 
-public String extractSubject(String token) {
- return Jwts.parserBuilder().setSigningKey(key).build()
-     .parseClaimsJws(token).getBody().getSubject();
-}
+        return Jwts.builder()
+                .setId(UUID.randomUUID().toString())
+                .setSubject(userId.toString())
+                .setIssuer(issuer)
+                .setIssuedAt(Date.from(now))
+                .claim("username", username)
+                .claim("role", role)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
 
-public String extractRole(String token) {
- Object role = Jwts.parserBuilder().setSigningKey(key).build()
-     .parseClaimsJws(token).getBody().get("role");
- return role == null ? "USER" : role.toString();
-}
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+        }
+        public Key getKey() { return key;
+    }
 }

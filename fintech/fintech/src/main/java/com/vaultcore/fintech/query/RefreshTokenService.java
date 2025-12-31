@@ -1,4 +1,4 @@
-package com.vaultcore.fintech.auth;
+package com.vaultcore.fintech.query;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

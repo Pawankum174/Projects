@@ -1,30 +1,41 @@
 package com.vaultcore.fintech.users;
+
 import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
 public class User {
-  @Id
-  private UUID id;
 
-  @Column(unique = true, nullable = false)
-  private String username;
+    @Id
+    @GeneratedValue
+    private UUID id;
 
-  @Column(nullable = false)
-  private String passwordHash;
+    @Column(nullable = false, unique = true)
+    private String username;
 
-  @Column(nullable = false)
-  private String role = "USER";
+    @Column(nullable = false)
+    private String passwordHash;
 
-  @PrePersist
-  void pre() { if (id == null) id = UUID.randomUUID(); }
+    @Column(nullable = false, unique = true)
+    private String email;   // ✅ required, unique
 
-  public UUID getId() { return id; }
-  public String getUsername() { return username; }
-  public void setUsername(String username) { this.username = username; }
-  public String getPasswordHash() { return passwordHash; }
-  public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
-  public String getRole() { return role; }
-  public void setRole(String role) { this.role = role; }
+    @Column(nullable = false)
+    private String role;
+
+    // getters and setters
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getPasswordHash() { return passwordHash; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }

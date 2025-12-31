@@ -16,7 +16,7 @@ export default function Login() {
     e.preventDefault();
     setLoading(true); setError(null);
     try {
-      const resp = await api.post("/auth/login", { username, password });
+      const resp = await api.post("/vaultcore/api/auth/login", { username, password });
       setAccessToken(resp.data.access_token);
       navigate("/dashboard");
     } catch (err) {

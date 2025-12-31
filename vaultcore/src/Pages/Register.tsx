@@ -9,7 +9,7 @@ export default function Register() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirm) return setMsg("Passwords do not match");
-    try { await api.post("/auth/register", { username, password }); setMsg("Registration successful"); }
+    try { await api.post("/vaultcore/api/auth/register", { username, password }); setMsg("Registration successful"); }
     catch { setMsg("Registration failed"); }
   };
 
