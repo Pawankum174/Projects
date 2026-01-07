@@ -1,28 +1,34 @@
 import { useState } from "react";
-import api from "../api";
+import axios, { AxiosError } from "axios";
 
 
-export default function Register() {
-  const [username, setUsername] = useState(""); const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState(""); const [msg, setMsg] = useState<string | null>(null);
+export default function RegisterPage() {
+  const [form, setForm] = useState({ username: "", password: "", email: "" });
+  const [message, setMessage] = useState("");
 
-  const submit = async (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== confirm) return setMsg("Passwords do not match");
-    try { await api.post("/vaultcore/api/auth/register", { username, password }); setMsg("Registration successful"); }
-    catch { setMsg("Registration failed"); }
+    try {
+      const res = await axios.post("http://localhost:8081/vaultcore/api/auth/register", form);
+      setMessage(res.data.message);
+    } catch (err) {
+     const axiosError = err as AxiosError<{ message: string }>;
+      setMessage(axiosError.response?.data?.message || "Error occurred");
+    }
   };
 
   return (
-    <div className="login-container">
+    <div>
       <h2>Register</h2>
-      <form onSubmit={submit} className="login-form">
-        <label>Username</label><input value={username} onChange={(e) => setUsername(e.target.value)} required />
-        <label>Password</label><input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <label>Confirm</label><input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
+      <form onSubmit={handleSubmit}>
+        <input name="username" placeholder="Username" onChange={handleChange} required />
+        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+        <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
         <button type="submit">Register</button>
       </form>
-      {msg && <p className={msg.includes("successful") ? "success-message" : "error-message"}>{msg}</p>}
+      <p>{message}</p>
     </div>
   );
 }

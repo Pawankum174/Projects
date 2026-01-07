@@ -6,7 +6,11 @@ import Register from "./Pages/Register";
 import ResetPassword from "./Services/ResetPassword";
 import ResetPasswordConfirm from "./Services/ResetPasswordConform";
 import Dashboard from "./Pages/Dashboard";
+
+import './App.css';
+import './Pages/Register.css';
 import './Pages/Login.css';
+
 function Private({ children }: { children: React.ReactElement }) {
   const token = useAuthStore((s) => s.accessToken);
   return token ? children : <Navigate to="/" replace />;
@@ -14,6 +18,7 @@ function Private({ children }: { children: React.ReactElement }) {
 
 export default function App() {
   return (
+    
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -21,6 +26,7 @@ export default function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/reset-password/confirm" element={<ResetPasswordConfirm />} />
         <Route path="/dashboard" element={<Private><Dashboard /></Private>} />
+           
       </Routes>
     </Router>
   );

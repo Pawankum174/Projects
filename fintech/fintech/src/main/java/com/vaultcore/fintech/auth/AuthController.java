@@ -129,8 +129,8 @@ public class AuthController {
         PasswordResetToken t = new PasswordResetToken(token, user, Instant.now().plusSeconds(900));
         resetRepo.save(t);
 
-        String link = "http://localhost:3000/reset-password/confirm?token=" + token;
-        email.sendPasswordResetEmail(emailAddr, link);
+//        String link = "http://localhost:3000/reset-password/confirm?token=" + token;
+//        email.sendPasswordResetEmail(emailAddr, link);
 
         return ResponseEntity.ok(Map.of("message", "Password reset link sent"));
     }

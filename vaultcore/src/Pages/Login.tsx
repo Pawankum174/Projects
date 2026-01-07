@@ -1,46 +1,37 @@
 import { useState } from "react";
-import api from "../api";
-import { useAuthStore } from "../Store/Auth";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 
-
-export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const setAccessToken = useAuthStore((s) => s.setAccessToken);
+export default function LoginPage() {
+  const [form, setForm] = useState({ username: "", password: "" });
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true); setError(null);
     try {
-      const resp = await api.post("/vaultcore/api/auth/login", { username, password });
-      setAccessToken(resp.data.access_token);
+      const res = await axios.post("http://localhost:8080/api/auth/login", form);
+      localStorage.setItem("access_token", res.data.access_token);
+      localStorage.setItem("refresh_token", res.data.refresh_token);
+      setMessage("Login successful!");
       navigate("/dashboard");
     } catch (err) {
-      setError("Invalid credentials");
-    } finally {
-      setLoading(false);
+      const error = err as AxiosError<{ message: string }>;
+      setMessage(error.response?.data?.message || "Error occurred");
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>VaultCore Login</h2>
-      <form onSubmit={handleLogin} className="login-form">
-        <label>Username</label>
-        <input value={username} onChange={(e) => setUsername(e.target.value)} required />
-        <label>Password</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit" disabled={loading}>{loading ? "Signing in..." : "Login"}</button>
-        <div className="login-actions">
-          <button type="button" className="secondary-btn" onClick={() => navigate("/register")}>Register</button>
-          <button type="button" className="secondary-btn" onClick={() => navigate("/reset-password")}>Forgot Password</button>
-        </div>
-        {error && <p className="error-message">{error}</p>}
+    <div>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <input name="username" placeholder="Username" onChange={handleChange} required />
+        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+        <button type="submit">Login</button>
       </form>
+      <p>{message}</p>
     </div>
   );
 }

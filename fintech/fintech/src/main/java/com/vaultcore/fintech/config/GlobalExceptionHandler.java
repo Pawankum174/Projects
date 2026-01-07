@@ -1,11 +1,11 @@
 package com.vaultcore.fintech.config;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -37,7 +37,11 @@ public class GlobalExceptionHandler {
     // Catch-all fallback
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex) {
+    	ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("error", "Unexpected error occurred"));
+        
+        
+
     }
 }
