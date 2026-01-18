@@ -8,7 +8,7 @@ import ResetPasswordConfirm from "./Services/ResetPasswordConform";
 import Dashboard from "./Pages/Dashboard";
 
 import './App.css';
-import './Pages/Register.css';
+//import './Pages/Register.css';
 import './Pages/Login.css';
 
 function Private({ children }: { children: React.ReactElement }) {
