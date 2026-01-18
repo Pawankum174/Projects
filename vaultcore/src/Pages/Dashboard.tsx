@@ -10,11 +10,20 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const run = async () => {
+      const run = async () => {
       if (!token) return;
+       const accountId = "ACC1001"; // real account id
       setLoading(true);
       try {
-        const resp = await api.get<Balance>("vaultcore/v1/accounts/<your-account-id>/balance");
+        const resp = await api.get<Balance>(
+         `/vaultcore/v1/accounts/${accountId}/balance`,
+          {
+            headers: {
+            Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         setData(resp.data);
       } finally { setLoading(false); }
     };
